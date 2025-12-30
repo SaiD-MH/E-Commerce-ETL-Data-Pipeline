@@ -1,7 +1,4 @@
-# src/db_connection.py
-#from sqlalchemy import create_engine, Engine, text
 import os
-
 import pandas as pd
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
@@ -24,17 +21,12 @@ class DatabaseConnection:
         password: str | None = None,
         port: str | None = None,
     ):
-        ENV = ""
-        if os.getenv("APP_ENV") == "DEV":
-            ENV = "DEV"
-        else:
-            ENV = "TEST"
-
-        self.host = host or os.getenv(f"{ENV}_DB_HOST")
-        self.database = database or os.getenv(f"{ENV}_DB_NAME")
-        self.user = user or os.getenv(f"{ENV}_DB_USER")
-        self.password = password or os.getenv(f"{ENV}_DB_PWD")
-        self.port = port or os.getenv(f"{ENV}_DB_PORT")
+        
+        self.host = host or os.getenv(f"DB_HOST")
+        self.database = database or os.getenv(f"DB_NAME")
+        self.user = user or os.getenv(f"DB_USER")
+        self.password = password or os.getenv(f"DB_PWD")
+        self.port = port or os.getenv(f"DB_PORT")
 
         self._validate_db_config()
         self._engine: Engine | None = None
