@@ -3,12 +3,12 @@ import pandas as pd
 import sys
 import os
 # Add parent directory to path
-sys.path.append(os.path.abspath(os.path.join(os.getcwd(), "../..")))
+# Get the project root directory (2 levels up from this file)
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+sys.path.insert(0, project_root)
+
 from src.db_connection import DatabaseConnection
 from datetime import datetime
-
-# url = 'https://raw.githubusercontent.com/SaiD-MH/Covid-19-Data-Pipeline/main/data/03-25-2025.csv'
-
 
 
 def read_csv_from_source(file_name :str) -> pd.DataFrame:
@@ -17,14 +17,27 @@ def read_csv_from_source(file_name :str) -> pd.DataFrame:
         Read csv file and return total number for readed files
     """
 
-    uri = f'../../data/{file_name}'
+    url = f'https://raw.githubusercontent.com/SaiD-MH/E-Commerce-ETL-Data-Pipeline/main/data/{file_name}'
     try:
 
-        raw_data = pd.read_csv(uri)
+        raw_data = pd.read_csv(url)
     except FileNotFoundError as e:
-        raise (f"File Not Found, Check file avaiability: {uri}") from e
+        raise FileNotFoundError(f"File Not Found, Check file avaiability: {url}") from e
     except Exception as e:
         raise Exception (f"Error while trying loading the file : {e}") from e
+
+
+    required_columns = [
+        "InvoiceNo", "StockCode", "Description", "Quantity",
+        "InvoiceDate", "UnitPrice", "CustomerID", "Country"
+    ]
+
+    missing_required = set(required_columns) - set(raw_data.columns)
+
+    if missing_required:
+        raise (f"Required Columns are missing : {missing_required}")
+    if raw_data.empty:
+        raise pd.errors.EmptyDataError(f"Empty Dataframe")
 
     return raw_data
 
