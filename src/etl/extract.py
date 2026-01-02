@@ -2,13 +2,22 @@
 import pandas as pd
 import sys
 import os
-# Add parent directory to path
 # Get the project root directory (2 levels up from this file)
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 sys.path.insert(0, project_root)
 
 from src.db_connection import DatabaseConnection
 from datetime import datetime
+
+
+def validate_required_columns_existance(raw_data:pd.DataFrame) -> set:
+    required_columns = [
+        "InvoiceNo", "StockCode", "Description", "Quantity",
+        "InvoiceDate", "UnitPrice", "CustomerID", "Country"
+    ]
+
+    missing_required = set(required_columns) - set(raw_data.columns)
+    return missing_required
 
 
 def read_csv_from_source(file_name :str) -> pd.DataFrame:
@@ -32,7 +41,7 @@ def read_csv_from_source(file_name :str) -> pd.DataFrame:
         "InvoiceDate", "UnitPrice", "CustomerID", "Country"
     ]
 
-    missing_required = set(required_columns) - set(raw_data.columns)
+    missing_required = validate_required_columns_existance(raw_data)
 
     if missing_required:
         raise (f"Required Columns are missing : {missing_required}")
@@ -121,5 +130,3 @@ def run_extraction() -> dict:
 
     return extraction_meta_data
 
-
-run_extraction()
