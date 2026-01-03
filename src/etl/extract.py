@@ -108,7 +108,7 @@ def load_raw_data_to_bronze(raw_data: pd.DataFrame , db_connection: DatabaseConn
     return db_connection.load_dataframe_into_db(raw_data , "bronze", "raw_sales")
 
 
-def run_extraction() -> dict:
+def run_extraction(conn: DatabaseConnection) -> dict:
 
     """
     Function to orchestra the execution flow of the extraction script
@@ -116,7 +116,7 @@ def run_extraction() -> dict:
     :return: return dictionary with information about the execution flow 
     :rtype: dict
     """
-    conn = DatabaseConnection()
+    # conn = DatabaseConnection()
     raw_data = read_csv_from_source('data_13-12-2025.csv')
     raw_data = normalize_dataframe_columns_name(raw_data)
     raw_data = add_ingestion_datetime_column(raw_data)
