@@ -130,3 +130,7 @@ def run_extraction(conn: DatabaseConnection) -> dict:
 
     return extraction_meta_data
 
+
+
+if __name__ == "__main__":
+    print(run_extraction(DatabaseConnection()))
