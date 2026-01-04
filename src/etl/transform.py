@@ -40,7 +40,7 @@ def drop_nullable_values(raw_data: pd.DataFrame) -> pd.DataFrame:
     """
     raw_data_copy = raw_data.copy()
 
-    columns = ['invoice_number', 'stock_code','quantity','invoice_date' , 'unit_price','customer_id' , 'country']
+    columns = ['invoice_number', 'stock_code','quantity','invoice_date' , 'unit_price']
     return raw_data_copy.dropna(subset=columns)
 
 def drop_zero_quantity(raw_data: pd.DataFrame)-> pd.DataFrame:
@@ -58,7 +58,7 @@ def drop_zero_quantity(raw_data: pd.DataFrame)-> pd.DataFrame:
     return raw_data_copy[ raw_data_copy['quantity'] != 0]
 
 
-def standeralize_invoice_date_format(raw_data: pd.DataFrame) -> pd.DataFrame:
+def standardize_invoice_date_format(raw_data: pd.DataFrame) -> pd.DataFrame:
     """
     Docstring for standeralize_invoice_date_format
     
@@ -88,7 +88,7 @@ def drop_non_postive_unit_price_values(raw_data : pd.DataFrame) -> pd.DataFrame:
 
     raw_data_copy = raw_data.copy()
 
-    raw_data_copy = raw_data_copy[ raw_data_copy['unit_price'] <= 0 ]
+    raw_data_copy = raw_data_copy[ raw_data_copy['unit_price'] > 0 ]
 
     return raw_data_copy
 
@@ -121,7 +121,7 @@ def add_customer_type_column(raw_data: pd.DataFrame)-> pd.DataFrame:
 
     raw_data_copy = raw_data.copy()
     
-    raw_data_copy['customer_type'] = raw_data_copy['customer_id'].apply(lambda x: "guest" if x == np.nan else 'registered')
+    raw_data_copy['customer_type'] = raw_data_copy['customer_id'].apply(lambda x: "guest" if pd.isna(x) else 'registered')
 
     return raw_data_copy
 
@@ -182,21 +182,22 @@ def run_transformation_cycle(db_connection: DatabaseConnection) -> dict:
     :return: metadata about the loaded and stored data
     :rtype: dict
     """
-    raw_data  = read_raw_data_from_bronze(db_connection)
+    raw_data = read_raw_data_from_bronze(db_connection)
     cleansed = drop_nullable_values(raw_data)
     cleansed = drop_zero_quantity(cleansed)
-    cleansed = standeralize_invoice_date_format(cleansed)
+    cleansed = standardize_invoice_date_format(cleansed)
+    cleansed = drop_non_postive_unit_price_values(cleansed)
     cleansed = add_customer_type_column(cleansed)
+    cleansed = add_transformation_date_column(cleansed)
     cleansed = add_is_return_column(cleansed)
     cleansed = add_total_line_column(cleansed)
-    raw_data_length = len(cleansed)
+    cleansed_length = len(cleansed)
     total_inserted = load_transformed_data_into_database(cleansed , db_connection)
 
-    cleansed_data_length = len(cleansed)
     return {
-        "source_loaded_num": raw_data_length,
+        "source_loaded_num": cleansed_length,
         "total_inserted_into_silver" : total_inserted,
-        "status" : "Success" if (cleansed_data_length == raw_data_length) else "Failed"
+        "status" : "Success" if (total_inserted == cleansed_length) else "Failed"
     }
 
 
