@@ -69,9 +69,9 @@ def standardize_invoice_date_format(raw_data: pd.DataFrame) -> pd.DataFrame:
     """
 
     raw_data_copy = raw_data.copy()
-    raw_data_copy['invoice_date'] = pd.to_datetime(raw_data_copy['invoice_date'] , errors='coerce')
+    raw_data_copy['invoice_date'] = pd.to_datetime(raw_data_copy['invoice_date'] , errors='coerce',dayfirst=True)
 
-    raw_data_copy['invoice_date'] = raw_data_copy['invoice_date'].dt.strftime("%Y-%m-%d %H:%M:%S")
+    # raw_data_copy['invoice_date'] = raw_data_copy['invoice_date'].dt.strftime("%Y-%m-%d %H:%M:%S")
 
     return raw_data_copy
 
