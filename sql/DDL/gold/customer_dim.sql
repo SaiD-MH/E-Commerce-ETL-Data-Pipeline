@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS gold.customer_dim (
 
     customer_key SERIAL PRIMARY KEY,
-    customer_id INTEGER NULL,
+    customer_id VARCHAR NULL,
     customer_type VARCHAR(20) NOT NULL
 
 );

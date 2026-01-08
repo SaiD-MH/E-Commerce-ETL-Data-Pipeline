@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS gold.date_dim(
 
 
     date_key int primary key ,
-    full_date date not null ,
+    full_date timestamp not null ,
     day_of_week int not null,
     day_of_month int not null,
     day_name varchar(10) not null,

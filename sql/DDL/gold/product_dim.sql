@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS gold.product_dim (
 
-    product_key SERIAL PRIMARY KEY,
+    product_key PRIMARY KEY,
     description VARCHAR(1000) NULL , 
     stock_code VARCHAR(100) NOT NULL 
 );

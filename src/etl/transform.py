@@ -7,7 +7,7 @@ from src.db_connection import DatabaseConnection
 from datetime import datetime
 from sqlalchemy import text
 import numpy as np
-
+import uuid
 def get_max_ingestion_date(db_conn: DatabaseConnection) -> datetime.date:
     """
         Function to return the max date of the column from the bronze.raw_sales
@@ -157,6 +157,9 @@ def add_total_line_column(raw_data : pd.DataFrame) -> pd.DataFrame :
     raw_data_copy['total_line'] = raw_data_copy['quantity'] * raw_data_copy['unit_price']
 
     return raw_data_copy
+
+
+
 
 def load_transformed_data_into_database(tranformed_data : pd.DataFrame , db_conn : DatabaseConnection) ->int:
     """
