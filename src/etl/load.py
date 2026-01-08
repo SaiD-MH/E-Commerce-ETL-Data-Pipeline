@@ -237,7 +237,7 @@ def run_load(db_conn:DatabaseConnection):
 
     return {
         "total_from_silver": silver_data_len,
-        "total_inserted_into_silver" : total_inserted_into_gold,
+        "total_inserted_into_gold" : total_inserted_into_gold,
         "status" : "Success" if (silver_data_len == total_inserted_into_gold) else "Failed"
     }
 

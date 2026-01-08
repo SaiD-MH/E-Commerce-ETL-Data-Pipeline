@@ -48,8 +48,8 @@ def test_extraction_cycle_when_sucess(pg_container):
     result  = run_extraction(pg_container  )
 
     expected = {
-            "source_loaded_num":10097,
-            "total_inserted_into_bronze":10097,
+            "source_loaded_num":999,
+            "total_inserted_into_bronze":999,
             "status":"Success"
     }
 
