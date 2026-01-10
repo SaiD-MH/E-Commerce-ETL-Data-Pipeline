@@ -87,7 +87,6 @@ def fill_customer_dim_table(cleansed_data: pd.DataFrame , db_conn:DatabaseConnec
     customer_data = cleansed_data.copy()
     
     known_customers = customer_data[ customer_data['customer_type'] =='registered']
-    unknown_customers = customer_data[ customer_data['customer_type'] =='guest']
     
     all_existing_customers = db_conn.read_dataframe_from_db("SELECT * FROM gold.customer_dim where customer_type ='registered';")
 
@@ -96,7 +95,7 @@ def fill_customer_dim_table(cleansed_data: pd.DataFrame , db_conn:DatabaseConnec
     customers_to_be_inserted = customers_to_be_inserted[ ['customer_id' , 'customer_type']]
     customers_to_be_inserted = customers_to_be_inserted.drop_duplicates(subset=['customer_id' ,'customer_type'])
     
-    customers_to_be_inserted = pd.concat([customers_to_be_inserted , unknown_customers],ignore_index=True)
+    
     customers_to_be_inserted = customers_to_be_inserted [ ['customer_id' , 'customer_type']]
     # 0 if len(customers_to_be_inserted) == 0  else db_conn.load_dataframe_into_db(customers_to_be_inserted , 'gold','customer_dim')
     return customers_to_be_inserted
@@ -148,8 +147,6 @@ def fill_country_dim_table(cleansed_data: pd.DataFrame , db_conn: DatabaseConnec
     
     new_batch_to_be_inserted = new_batch_to_be_inserted[ new_batch_to_be_inserted['_merge']=='left_only']
     new_batch_to_be_inserted = new_batch_to_be_inserted[['country']].drop_duplicates(subset=['country'])
-
-    # 0 if len(new_batch_to_be_inserted) == 0 else db_conn.load_dataframe_into_db(new_batch_to_be_inserted ,'gold' , 'country_dim')
     return new_batch_to_be_inserted
 
 def fill_sales_fact_table(db_conn:DatabaseConnection , cleansed_data:pd.DataFrame )-> pd.DataFrame:
@@ -167,7 +164,7 @@ def fill_sales_fact_table(db_conn:DatabaseConnection , cleansed_data:pd.DataFram
 
     customer_dim = db_conn.read_dataframe_from_db("SELECT * FROM  GOLD.CUSTOMER_DIM;")
     country_dim = db_conn.read_dataframe_from_db("SELECT  * FROM  GOLD.COUNTRY_DIM;")
-    product_dim = db_conn.read_dataframe_from_db("SELECT * FROM GOLD.product_dim;")
+    product_dim = db_conn.read_dataframe_from_db("SELECT * FROM GOLD.PRODUCT_DIM;")
 
     cleansed_data['date_key'] = cleansed_data['invoice_date'].apply(lambda x: int(x.strftime("%Y%m%d")))
     cleansed_data['customer_id'] = cleansed_data['customer_id'].apply(lambda x: '-1' if x == pd.isna(x) else x)    
