@@ -24,7 +24,7 @@ jobs:
       - name: run unit tests
         run: |
           cd tests/unit-tests
-          pytest
+          pytest extraction_unit_testing.py transformation_unit_testing.py loading_unit_testing.py
 
   run-integration-testing:
     runs-on: ubuntu-latest
@@ -43,4 +43,4 @@ jobs:
       - name: run integration tests
         run: |
           cd tests/integration-testing
-          pytest
+          pytest extraction_integeration_testing.py transformation_integeration_testing.py loading_integeration_testing.py
