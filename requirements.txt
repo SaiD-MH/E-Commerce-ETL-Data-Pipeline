@@ -4,4 +4,4 @@ sqlalchemy==2.0.21
 python-dotenv
 ruff
 pytest
-pip install testcontainers[postgresql]
+testcontainers[postgresql]
