@@ -42,5 +42,5 @@ jobs:
       
       - name: run integration tests
         run: |
-          cd tests/integration-testing
+          cd tests/integeration-testing
           pytest extraction_integeration_testing.py transformation_integeration_testing.py loading_integeration_testing.py
