@@ -117,7 +117,7 @@ def run_extraction(conn: DatabaseConnection) -> dict:
     :rtype: dict
     """
     # conn = DatabaseConnection()
-    raw_data = read_csv_from_source('data_13-12-2025.csv')
+    raw_data = read_csv_from_source(f'data_{datetime.now().date().strftime("%d-%m-%Y")}.csv')
     raw_data = normalize_dataframe_columns_name(raw_data)
     raw_data = add_ingestion_datetime_column(raw_data)
     total_inserted = load_raw_data_to_bronze(raw_data , conn)
