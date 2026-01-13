@@ -3,6 +3,7 @@ import pandas as pd
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import Engine
+from typing import Optional
 
 load_dotenv()  # loads .env file
 
@@ -15,11 +16,11 @@ class DatabaseConnection:
 
     def __init__(
         self,
-        host: str | None = None,
-        database: str | None = None,
-        user: str | None = None,
-        password: str | None = None,
-        port: str | None = None,
+        host: Optional[str] = None,
+        database: Optional[str] = None,
+        user: Optional[str] = None,
+        password: Optional[str] = None,
+        port: Optional[str] = None
     ):
         
         self.host = host or os.getenv(f"DB_HOST")
